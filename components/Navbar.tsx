@@ -57,6 +57,8 @@ export default function Navbar() {
             ) : (
               <Moon className="h-4 w-4" />
             )}
+
+            
           </Button>
           {isLoading ? (
             <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
