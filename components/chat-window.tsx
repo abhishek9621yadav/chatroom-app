@@ -3,6 +3,7 @@
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,10 +60,36 @@ export default function ChatWindow({
   const [loading, setLoading] = useState(true);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  let socket: Socket;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    socket = io({ path: "/api/socketio", transports: ["polling"] });
+
+    // Join current chatroom
+    socket.emit("joinroom", chatroom._id);
+
+    // Listen for incoming messages
+    socket.on("receiveMessage", (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    // Listen for typing events
+    socket.on("typing", (userId) => {
+      setTypingUsers((prev) => [...prev, userId]);
+      toast.info(`${userId} is typing...`, {
+        duration: 2000,
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [chatroom._id]);
 
   const fetchMessages = async () => {
     try {
@@ -155,6 +182,14 @@ export default function ChatWindow({
         toast.error(data.message || "Failed to send message");
         setNewMessage(messageContent);
       }
+      // Emit message to the server
+      socket.emit("sendMessage", {
+        roomId: chatroom._id,
+        message: {
+          content: messageContent,
+          type: "text",
+        },
+      });
     } catch (error) {
       toast.error("An error occurred while sending message");
       setNewMessage(messageContent);

@@ -168,7 +168,7 @@ function ChatPage() {
             isMobile={isMobile}
           />
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+          <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900 md:hidden"> // hidden on mobile
             <div className="text-center">
               <div className="w-64 h-64 mx-auto mb-8 opacity-20">
                 <svg viewBox="0 0 303 172" className="w-full h-full">
