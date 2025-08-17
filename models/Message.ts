@@ -8,7 +8,9 @@ interface IMessage extends Document {
   fileName: string;
   fileSize: string;
   content: string; // Message content
-  isDelete: boolean;
+  isDeleted: boolean;
+  isPinned: boolean;
+  isEdited: boolean;
   timestamp: Date; // Timestamp of when message was sent
 }
 
@@ -20,7 +22,9 @@ const MessageSchema = new Schema<IMessage>({
   fileName: { type: String, required: false },
   fileSize: { type: String, required: false },
   content: { type: String, required: true, minlength: 1, maxlength: 2000 },
-  isDelete: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
+  isPinned: { type: Boolean, default: false },
+  isEdited: { type: Boolean, default: false },
   timestamp: { type: Date, default: Date.now },
 });
 
