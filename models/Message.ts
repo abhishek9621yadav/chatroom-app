@@ -11,6 +11,7 @@ interface IMessage extends Document {
   isDeleted: boolean;
   isPinned: boolean;
   isEdited: boolean;
+  seenBy: mongoose.Types.ObjectId[];
   timestamp: Date; // Timestamp of when message was sent
 }
 
@@ -25,6 +26,8 @@ const MessageSchema = new Schema<IMessage>({
   isDeleted: { type: Boolean, default: false },
   isPinned: { type: Boolean, default: false },
   isEdited: { type: Boolean, default: false },
+  
+  seenBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   timestamp: { type: Date, default: Date.now },
 });
 

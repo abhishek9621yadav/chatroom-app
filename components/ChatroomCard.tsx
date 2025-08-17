@@ -21,6 +21,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ChatroomCardProps {
   chatroom: any;
@@ -35,13 +36,11 @@ export default function ChatroomCard({
 }: ChatroomCardProps) {
   const [password, setPassword] = useState("");
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const router = useRouter();
   const isMember = chatroom.users.some(
-    (user: any) => user._id === currentUserId
+    (user: any) => user === currentUserId
   );
-  const isCreator = String(chatroom.createdBy) === String(currentUserId);
-  console.log(chatroom.createdBy, currentUserId);
-  console.log(typeof chatroom.createdBy, typeof currentUserId);
-
+  console.log("Chatroom Card Rendered", isMember, chatroom.users, currentUserId);
   const handleJoinClick = () => {
     if (chatroom.isPrivate) {
       setShowPasswordDialog(true);
@@ -95,17 +94,13 @@ export default function ChatroomCard({
           </div>
         </CardContent>
         <CardFooter className="flex justify-end">
-          {/* {isCreator ? (
-            <Button variant="secondary" disabled>
-              You created this
-            </Button>
-          ) : */}
           {isMember ? (
-            <Button onClick={() => onJoin(chatroom._id)}>Enter Chatroom</Button>
+            <Button onClick={() => router.push(`/chat?roomId=${chatroom._id}`)}>
+              Enter Chatroom
+            </Button>
           ) : (
             <Button onClick={handleJoinClick}>Join Chatroom</Button>
           )}
-        
         </CardFooter>
       </Card>
 

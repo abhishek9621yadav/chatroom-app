@@ -98,7 +98,7 @@ export default function ChatroomsPage() {
 
       if (response.ok) {
         toast.success("Successfully joined the chatroom!");
-        router.push(`/chatrooms/${chatroomId}`);
+        router.push(`/chat?roomId=${chatroomId}`);
       } else {
         toast.error(data.message || "Failed to join chatroom");
       }
